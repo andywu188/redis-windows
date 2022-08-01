@@ -1,0 +1,41 @@
+name: publish-nuget
+
+on:
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: echo "${{github.repository}}存储库已克隆到运行程序"
+      - name: 列出存储库中的文件
+        run: |
+          dir ${{ github.workspace }}
+
+      - name: install nuget
+        uses: nuget/setup-nuget@v1
+        with:       
+            nuget-version: '6.x'
+
+      - name: Build Nuget Package
+        shell: pwsh
+        run: |
+          Invoke-Pester .\build.ps1
+
+      - name: display nupkg file
+        run: |
+          dir .\bin
+
+      # Publish
+      - name: Add GitHub Source
+        run: |
+          dotnet nuget add source --name github "https://nuget.pkg.github.com/OWNER/index.json"
+
+      - name: Push generated package to GitHub and NuGet
+        run: |
+          dotnet nuget push .\bin\*.nupkg --source "github" --skip-duplicate  --api-key ${{ secrets.GITHUB_TOKEN }} --no-symbols true
+          dotnet nuget push .\bin\*.nupkg --source "https://api.nuget.org/v3/index.json" --skip-duplicate --api-key ${{ secrets.NUGET_TOKEN }} --no-symbols true
