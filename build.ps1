@@ -2,7 +2,7 @@
 
 param(
 	[Parameter(Position = 0)]
-	$RedisVersion = "7.0.4.4",
+	$RedisVersion = "7.0.9.0",
 
 	[Parameter(Position = 1)]
 	[string] $BuildArches = "win-x64"
