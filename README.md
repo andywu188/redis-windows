@@ -1,18 +1,13 @@
 
-# This is an unofficial version of Redis for Windows X64 system<!-- [zkteco-home](https://github.com/zkteco-home/redis-windows)-->
+# This is an unofficial version of Redis for Windows X64<!-- [zkteco-home](https://github.com/zkteco-home/redis-windows)-->
+
+## Warning: 
+
+# If you don't like(click star) and don't use it, otherwise it will be regarded as illegal use.
 
 
-If you want to get latest version or [report any issues],please contact [michael](michael_zkteco@126.com), thanks in advance!
+If you want to get latest version or [report any issues],please contact (michael_zkteco@126.com), thanks in advance!
 
-## Why not open source code?
-
-1. It is very complicated to work on the windows edition
-
-2. We have a professional team to maintain its stable operation
-
-3. We can collect all the issues, because you don't have the source code, to avoid changing the source code by yourself and not being able to share
-
-4. according to Redis BSD-3,it is legal
 
 It includes several new user-facing features, significant performance
 optimizations, and many other improvements. It also includes changes that
@@ -68,26 +63,29 @@ In no event shall the author of this Software be liable for any damages whatsoev
   
 ## Supported Windows Versions
 
-- Windows Vista x64
-- Windows Server 2008 x64
-- Windows Server 2012 x64
-- Windows Server 2016/2019 x64  
-- Windows 7 x64
-- Windows 10/11 x64
+- Windows Server 2008/2012/2016/2019/2022 x64  
+- Windows 7/10/11 x64
+
 
 
 ## Default configrations
 
 	save ""
-	
 	maxmemory 256mb
-	
 	appendonly no
-	
 	maxmemory-policy allkeys-lru
 
 - if you want to modify parameters,it is recommanded you edit the redis.conf file
 
+## Support latest RedisJson 
+
+	edit redis.conf and add the following parameters:
+	
+	enable-module-command yes
+	loadmodule rejson.dll
+
+	ReJson.dll download:
+	https://github.com/zkteco-home/RedisJson
 
 ## Running Redis as a Service
 
