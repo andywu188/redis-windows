@@ -2,7 +2,7 @@
 
 param(
 	[Parameter(Position = 0)]
-	$RedisVersion = "7.0.9.0",
+	$RedisVersion,
 
 	[Parameter(Position = 1)]
 	[string] $BuildArches = "win-x64"
@@ -116,6 +116,9 @@ try
 		};
 	}
 
+	# Get the version of redis-server.exe
+	$RedisVersion = (Get-Command .\redis-server.exe).FileVersionInfo.FileVersion
+	
 	DownloadDependencies
 
 	Write-Diagnostic("Redis Version: $RedisVersion")
