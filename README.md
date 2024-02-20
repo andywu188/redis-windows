@@ -3,8 +3,7 @@
 
 ## Warning: 
 
-# If you don't like(click star) and don't use it, otherwise it will be regarded as illegal use.
-
+# it will be regarded as illegal use If you don't like(click star).
 
 If you want to get latest version or [report any issues],please contact (michael_zkteco@126.com), thanks in advance!
 
@@ -178,6 +177,10 @@ After you have edited and created the necessary configuration files,you must ope
 
 
 redis-server --service-install --service-name Sentinel sentinel.conf --sentinel
+
+## Contribute
+
+
 
 
   
