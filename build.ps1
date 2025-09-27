@@ -1,4 +1,4 @@
-#requires -Version 5
+﻿#requires -Version 5
 
 param(
 	[Parameter(Position = 0)]
@@ -60,6 +60,54 @@ function Warn
 
 }
 
+function Get-RedisVersion {
+    <#
+    .SYNOPSIS
+        获取Redis版本号，优先从可执行程序读取，失败时回退到version.txt文件
+    #>
+    
+    $versionFromExe = $null
+    $versionFromFile = $null
+    
+    # 尝试从redis-server.exe获取版本信息
+    try {
+        Write-Diagnostic "尝试从redis-server.exe获取版本信息..."
+        $exeVersionInfo = Get-Command .\redis-server.exe -ErrorAction Stop | Select-Object -ExpandProperty FileVersionInfo
+        $versionFromExe = $exeVersionInfo.FileVersion
+        
+        if (-not [string]::IsNullOrWhiteSpace($versionFromExe)) {
+            Write-Diagnostic "从redis-server.exe成功获取版本: $versionFromExe"
+            return $versionFromExe.Trim()
+        } else {
+            Write-Diagnostic "redis-server.exe中未找到有效的版本信息"
+        }
+    } catch {
+        Warn "无法从redis-server.exe读取版本信息: $($_.Exception.Message)"
+    }
+    
+    # 如果从exe获取失败，尝试从version.txt文件读取
+    try {
+        Write-Diagnostic "尝试从version.txt文件获取版本信息..."
+        if (Test-Path ".\version.txt" -ErrorAction SilentlyContinue) {
+            $versionFromFile = Get-Content ".\version.txt" -First 1 -ErrorAction Stop
+            
+            if (-not [string]::IsNullOrWhiteSpace($versionFromFile)) {
+                Write-Diagnostic "从version.txt成功获取版本: $versionFromFile"
+                return $versionFromFile.Trim()
+            } else {
+                Write-Diagnostic "version.txt文件为空或第一行无内容"
+            }
+        } else {
+            Write-Diagnostic "未找到version.txt文件"
+        }
+    } catch {
+        Warn "读取version.txt文件失败: $($_.Exception.Message)"
+    }
+    
+    # 如果两种方式都失败，抛出异常
+    Die "无法获取Redis版本信息: 请确保redis-server.exe存在且包含版本信息，或提供有效的version.txt文件"
+}
+
 function DownloadDependencies()
 {
 	$folder = Join-Path $env:LOCALAPPDATA .\nuget;
@@ -97,7 +145,11 @@ function Nupkg
 		$arch = $platform.Arch
 
 		# Build packages
-		. $Nuget pack nuget\redis.windows.redist.nuspec -NoPackageAnalysis -Version $RedisVersion -Properties "Configuration=Release;Platform=$arch;" -OutputDirectory bin
+        try {
+            & $Nuget pack nuget\redis.windows.redist.nuspec -NoPackageAnalysis -Version $RedisVersion -Properties "Configuration=Release;Platform=$arch;" -OutputDirectory bin
+        } catch {
+            WriteException $_
+        }
 	}
 }
 
@@ -116,13 +168,17 @@ try
 		};
 	}
 
-	# Get the version of redis-server.exe
-	$RedisVersion = (Get-Command .\redis-server.exe).FileVersionInfo.FileVersion
+    # 获取Redis版本
+    if ([string]::IsNullOrWhiteSpace($RedisVersion)) {
+        $RedisVersion = Get-RedisVersion
+    } else {
+        Write-Diagnostic "使用参数提供的Redis版本: $RedisVersion"
+    }
 	
 	DownloadDependencies
 
-	Write-Diagnostic("Redis Version: $RedisVersion")
-	Write-Diagnostic("Enabled Architectures")
+	Write-Diagnostic("Redis版本: $RedisVersion")
+	Write-Diagnostic("启用架构: $($BuildArches)")
 
 	Nupkg
 	return;
