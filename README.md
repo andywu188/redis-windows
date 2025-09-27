@@ -1,186 +1,52 @@
-
-# This is an unofficial version of Redis for Windows X64<!-- [zkteco-home](https://github.com/zkteco-home/redis-windows)-->
-
-## Warning: 
-
-# it will be regarded as illegal use If you don't like(click star).
-
-If you want to get latest version or [report any issues],please contact (michael_zkteco@126.com), thanks in advance!
-
-
-It includes several new user-facing features, significant performance
-optimizations, and many other improvements. It also includes changes that
-potentially break backwards compatibility with older versions. We urge users to
-review the release notes carefully before upgrading.
-
-In particular, users should be aware of the following changes:
-
-1. It stores AOF as multiple files in a folder; see Multi-Part AOF below.
-	(automatically migrated an old-style AOF file (appendonly.aof) into the AOF directory (appendonlydir))
-	
-2. It uses a new version 10 format for RDB files, which is incompatible
-	with older versions.
-
-3. It converts ziplist encoded keys to listpacks on the fly when loading
-	an older RDB format. Conversion applies to loading a file from disk or
-	replicating from a Redis master and will slightly increase loading time.
-
-Here is a comprehensive list of changes in this release compared to 6.2.6.
-https://github.com/redis/redis/releases/tag/7.0-rc1
-
-
-
-If you want to know more, this is a list of selected starting points:
-
-Redis 7.0 release Notes . https://github.com/redis/redis/releases/tag/7.0-rc1
-
-Introduction to Redis data types. https://redis.io/topics/data-types-intro
-
-Try Redis directly inside your browser. https://try.redis.io
-
-The full list of Redis commands. https://redis.io/commands
-
-There is much more inside the official Redis documentation. https://redis.io/documentation
-
-## DISCLAIMER
-
-This release is based on [Redis](https://github.com/redis/redis). It has passed all the standard tests.
-
-Due to the many functional differences between windows and linux,There are still unknown issues/bugs, in particular there is a bug to work properly in certain scenarios.
-If you download and install it, you accept the following agreement by default：
-
-NO LIABILITY FOR DAMAGES
-
-In no event shall the author of this Software be liable for any damages whatsoever (including, without limitation, damages for loss of business profits, business interruption, loss of business information, or any other pecuniary loss) arising out of the use of or inability to use this product, even if the Author of this Software has been advised of the possibility of such damages.
-
-
-## Building from source code on Windows
-
-  - Redis binaries are built with the original source [Redis](https://github.com/redis/redis) and have been compiled with Visual Studio 2022 to obtain higher performance and better stability than the binaries built by Cygwin, MSYS, or even WSL2.
-
-  - Redis can be installed as a Windows Service.
-  
-## Supported Windows Versions
-
-- Windows Server 2008/2012/2016/2019/2022 x64  
-- Windows 7/10/11 x64
-
-
-
-## Default configrations
-
-	save ""
-	maxmemory 256mb
-	appendonly no
-	maxmemory-policy allkeys-lru
-
-- if you want to modify parameters,it is recommanded you edit the redis.conf file
-
-## Support latest RedisJson 
-
-	edit redis.conf and add the following parameters:
-	
-	enable-module-command yes
-	loadmodule rejson.dll
-
-	ReJson.dll download:
-	https://github.com/zkteco-home/RedisJson
-
-## Running Redis as a Service
-
--   Self elevation of the Redis executable so that service commands would work from a non-elevated command prompt.
-
--   Service naming so that multiple instances of the Redis service could be installed on one machine.
-
--   Automatically adjusting folder permissions so that when Redis is run under the NETWORK SERVICE account it could modify the files in the installation directory.
-
-
-
-### Run install_redis.cmd as Administrator  (recommanded)
-
-you also can use the following command and manage redis service:
-
-
-Installing the Service
-------------------------
-
-*--service-install*
-
-This must be the first argument on the redis-server command line. Arguments after this are passed in the order they occur to Redis when the service is launched. The service will be configured as Autostart and will be launched as "NT AUTHORITY\\NetworkService". Upon successful installation a success message will be displayed and Redis will exit.
-
-This command does not start the service.
-
-For instance:
-
-redis-server --service-install redis.conf --loglevel verbose
-
-Uninstalling the Service
-------------------------
-
-*--service-uninstall*
-
-This will remove the Redis service configuration information from the registry. Upon successful uninstallation a success message will be displayed and Redis will exit.
-
-This does command not stop the service.
-
-For instance:
-
-redis-server --service-uninstall
-
-Starting the Service
---------------------
-
-*--service-start*
-
-This will start the Redis service. Upon successful start, a success message will be displayed and Redis will begin running.
-
-For instance:
-
-redis-server --service-start
-
-Stopping the Service
---------------------
-
-*--service-stop*
-
-This will stop the Redis service. Upon successful termination a success message will be displayed and Redis will exit.
-
-For instance:
-
-redis-server --service-stop
-
-Naming the Service
-------------------
-
-*--service-name **name***
-
-This optional argument may be used with any of the preceding commands to set the name of the installed service. This argument should follow the service-install, service-start, service-stop or service-uninstall commands, and precede any arguments to be passed to Redis via the service-install command.
-
-The following would install and start three separate instances of Redis as a service:
-
-redis-server --service-install --service-name redisService1 redis.conf
-
-redis-server --service-start --service-name redisService1
-
-The following would stop and uninstall three separate instances of Redis as a service:
-
-redis-server --service-stop --service-name redisService1
-
-redis-server --service-uninstall --service-name redisService1
-
-
-Sentinel for Redis Server on Windows
-------------------------------------
- 
-
-After you have edited and created the necessary configuration files,you must open the necessary firewall port. you can install Redis Sentinel from the command prompt as follows:
-
-
-redis-server --service-install --service-name Sentinel sentinel.conf --sentinel
-
-## Contribute
-
-
-
-
-  
+### [English](https://github.com/redis-windows/redis-windows/blob/main/README.md) | [简体中文](https://github.com/redis-windows/redis-windows/blob/main/README.zh_CN.md)
+
+# Redis Windows Version
+### With the powerful automated building capability of GitHub Actions, we can compile the latest version of Redis for Windows system in real-time. 
+The entire compilation process is completely transparent and open, with the compilation script located in the [.github/workflows/](https://github.com/redis-windows/redis-windows/tree/main/.github/workflows) directory and the compilation logs available on the [Actions](https://github.com/redis-windows/redis-windows/actions) page. In addition, we have added a hash calculation step when the compilation is completed, and the result is printed in the log. This is unmodifiable and recorded in the release page. You can verify the hash value of the downloaded file against the log and release page.  
+Our project is absolutely pure and without any hidden features, and can withstand the scrutiny of all experts. If you have any good ideas, please feel free to communicate with us.  
+
+## We provide three operation modes: 
+1. Run the start.bat script in the project to start directly with one click.
+2. Use the command line.
+3. Support running as a system service.
+
+### Command line startup:
+cmd startup: 
+```shell
+redis-server.exe redis.conf
+```
+powershell startup: 
+```shell
+./redis-server.exe redis.conf
+```
+
+### Service installation:
+Can achieve automatic startup on boot. Please run it as an administrator and change RedisService.exe to the actual directory where it is stored.
+```shell
+sc.exe create Redis binpath=C:\Software\Redis\RedisService.exe start= auto
+```
+Start service
+```shell
+net start Redis
+```
+Out of Service
+```shell
+net stop Redis
+```
+Uninstall service
+```shell
+sc.exe delete Redis
+```
+
+![image](https://user-images.githubusercontent.com/515784/215540157-65f55297-cde2-49b3-8ab3-14dca7e11ee0.png)
+
+
+Project Home: https://github.com/redis-windows/redis-windows
+
+## Acknowledgement: 
+[![NetEngine](https://avatars.githubusercontent.com/u/36178221?s=180&v=4)](https://www.zhihu.com/question/424272611/answer/2611312760) 
+[![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=redis-windows)
+
+
+## Disclaimer
+We suggest that you use it for local development and follow Redis official guidance to deploy it on Linux for production environment. This project doesn't bear any responsibility for any losses caused by using it and is only for learning and exchange purposes.

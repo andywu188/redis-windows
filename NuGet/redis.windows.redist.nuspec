@@ -15,12 +15,13 @@
     <description>redis windows - the Redis Windows Service.
     NOTE: This package is an unofficial version of Redis Service for Windows X64 system</description>
     <tags>redis windows x64 redis-server redis-cli redist</tags>
-    <copyright>Copyright © 2006-2020</copyright>
+    <copyright>Copyright © 2006-2025</copyright>
   </metadata>
   <files>
-    <file src="..\redis-*.exe" target="redis\$Platform$\" />
-	<file src="..\redis*.conf" target="redis\$Platform$\" />
-    <file src="..\install*.cmd" target="redis\$Platform$\" />
+    <file src="..\*.exe" target="redis\$Platform$\" />
+	<file src="..\*.conf" target="redis\$Platform$\" />
+    <file src="..\*.dll" target="redis\$Platform$\" />
+    <file src="..\*.bat" target="redis\$Platform$\" />
 
     <file src="icon-redis.png" target="\" />
     <file src="redis.windows.redist.$Platform$.props" target="build\" />
